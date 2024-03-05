@@ -11,7 +11,7 @@ using System.Windows.Shapes;
 
 namespace Zint.CLI
 {
-    public enum BarcodeTypes
+    public enum Symbologies
     {
         BARCODE_CODE11 = 1,   // Code 11
         BARCODE_C25STANDARD = 2,   // 2 of 5 Standard (Matrix)
