@@ -270,9 +270,9 @@ namespace Zint.CLI
 
         //4.9 Adjusting Image Size (X-dimension)
 
-        public Switches XDimensionMM(double xDimensionMM, int dpi) { commandLine += $" --scalexdimdp={xDimensionMM:F2}mm,{dpi}dpi = "; return this; }
+        public Switches XDimensionMM(double xDimensionMM, int dpi) { commandLine += $" --scalexdimdp={xDimensionMM:F2}mm,{dpi}dpi"; return this; }
         public Switches XDimensionMils(double xDimensionMils, int dpi) { commandLine += $" --scalexdimdp={xDimensionMils:F2}in,{dpi}dpi"; return this; }
         public Switches XDimensionPixels(double xDimensionPixels) { commandLine += $" --scale={xDimensionPixels / 2}"; return this; }
-
+        public Switches XDimensionScale(double scale) { commandLine += $" --scale={scale}"; return this; }
     }
 }

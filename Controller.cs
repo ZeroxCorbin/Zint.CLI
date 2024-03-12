@@ -13,7 +13,7 @@ namespace Zint.CLI
 
         public static string ZintPath { get; } = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Zint\\zint-2.13.0\\zint.exe");
 
-        public static string GetCommand(Symbologies type, string data, string output, double scale, int dpi) => new Switches().Barcode(type).XDimensionMils(scale, dpi).Data(data).Output(output).ToString();
+        public static string GetCommand(Symbologies type, string data, string output, double scale, int dpi) => new Switches().Barcode(type).XDimensionScale(scale).Data(data).Output(output).ToString();
 
         public static bool GetBarcodePath(Symbologies type, string data, ref string output, double xDimMils, int dpi)
         {
@@ -64,8 +64,8 @@ namespace Zint.CLI
         public static double GetScale(double xdimMils, double dpi) => Math.Round(xdimMils * dpi * 2, MidpointRounding.AwayFromZero) / 2;
         public static double GetMils(double scale, int dpi) => scale / dpi;
 
-        public static double MMtoMils(double mm) => (mm * 39.3701);
-        public static double MilsToMM(double mils) => (mils) / 39.3701;
+        public static double MMtoMils(double mm) => mm * 39.3701;
+        public static double MilsToMM(double mils) => mils / 39.3701;
 
         public static int DPItoDPMM(int dpi) => (int)Math.Round(dpi / 25.4, 0);
     }
