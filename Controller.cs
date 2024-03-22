@@ -131,9 +131,9 @@ public class Controller
     }
     private static void Build_ErrorDataReceived(object sender, DataReceivedEventArgs e) { if (e.Data == null) return; IsError = true; __receivingImage = false; OutputReceived?.Invoke(e.Data, true); }
 
-    public static double GetScale(double xdimMils, int dpi) => Math.Round(xdimMils * dpi * 2, MidpointRounding.AwayFromZero) / 2;
-    public static double GetScale(double xdimMils, double dpi) => Math.Round(xdimMils * dpi * 2, MidpointRounding.AwayFromZero) / 2;
-    public static double GetMils(double scale, int dpi) => scale / dpi;
+    public static double GetScale(double xdimMils, int dpi) => Math.Round(xdimMils * dpi, MidpointRounding.AwayFromZero) / 2;
+    public static double GetScale(double xdimMils, double dpi) => Math.Round(xdimMils * dpi, MidpointRounding.AwayFromZero) / 2;
+    public static double GetMils(double scale, int dpi) => (scale / dpi) * 2;
 
     public static double MMtoMils(double mm) => mm * 39.3701;
     public static double MilsToMM(double mils) => mils / 39.3701;
