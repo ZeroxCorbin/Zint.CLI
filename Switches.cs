@@ -1,4 +1,7 @@
 ﻿
+using System.Reflection.Metadata;
+using System.Runtime.InteropServices;
+
 namespace Zint.CLI
 {
     public class Switches
@@ -268,11 +271,53 @@ namespace Zint.CLI
 
         //4.8 Rotating the Symbol
 
+        /// <summary>
+        /// The symbol can be rotated through four orientations using the --rotate option
+        /// followed by the angle of rotation as shown below.
+        /// 
+        /// --rotate=0 (default)
+        /// --rotate=90
+        /// --rotate=180
+        /// --rotate=270
+        ///
+        /// zint -d "This Text" --rotate=90
+        /// 
+        /// </summary>
+        /// <param name="degrees"></param>
+        /// <returns> --rotate={degrees}</returns>
+        public Switches Rotate(int degrees) { commandLine += $" --rotate={degrees}"; return this; }
+
         //4.9 Adjusting Image Size (X-dimension)
 
         public Switches XDimensionMM(double xDimensionMM, int dpi) { commandLine += $" --scalexdimdp={xDimensionMM:F2}mm,{dpi}dpi"; return this; }
         public Switches XDimensionMils(double xDimensionMils, int dpi) { commandLine += $" --scalexdimdp={xDimensionMils:F2}in,{dpi}dpi"; return this; }
         public Switches XDimensionPixels(double xDimensionPixels) { commandLine += $" --scale={xDimensionPixels / 2}"; return this; }
         public Switches XDimensionScale(double scale) { commandLine += $" --scale={scale}"; return this; }
+
+        //4.13 Direct Output to stdout
+
+        /// <summary>
+        /// The finished image files can be output directly to stdout for use as part of a
+        /// pipe by using the --direct option.By default --direct will output data as a PNG
+        /// image (or GIF image if libpng is not present), but this can be altered by
+        /// supplementing the --direct option with a --filetype option followed by the
+        /// suffix of the file type required.For example:
+        ///
+        ///     zint -b 84 --direct --filetype= pcx - d "Data to encode"
+        ///
+        /// This command will output the symbol as a PCX file to stdout.For the supported
+        /// output file formats see Table : Output File Formats.
+        ///
+        /// --------------------------------------------------------------------------------
+        ///
+        /// CAUTION: Outputting binary files to the command shell without catching that data
+        /// in a pipe can have unpredictable results. Use with care!
+        ///
+        /// --------------------------------------------------------------------------------
+        /// </summary>
+        /// <param name="fileType"></param>
+        /// <returns> --direct --filetype={fileType}</returns>
+        public Switches DirectStdout(string fileType = "png") { commandLine += $" --direct --filetype={fileType}"; return this; }
+
     }
 }
