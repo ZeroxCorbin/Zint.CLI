@@ -25,12 +25,10 @@ public class Controller
     public static string GetCommandStdout(Symbologies type, string data, string fileType, double scale) => new Switches().Barcode(type).XDimensionScale(scale).Data(data).DirectStdout(fileType).ToString();
     public static string GetCommandStdout(Symbologies type, string data, string fileType, double mils, int dpi) => new Switches().Barcode(type).XDimensionMils(mils, dpi).Data(data).DirectStdout(fileType).ToString();
 
-    public static bool GenerateBarcodeFile(Symbologies type, string data, ref string output, double scale)
+    public static bool SaveBarcode(Symbologies type, string data, ref string filePath, double scale)
     {
-        output = Path.Combine(Directory.GetCurrentDirectory(), output);
-
         IsError = false;
-        var process = LaunchProcess(ZintPath, GetCommand(type, data, output, scale), Directory.GetCurrentDirectory(), false);
+        var process = LaunchProcess(ZintPath, GetCommand(type, data, filePath, scale), Directory.GetCurrentDirectory(), false);
 
         if (process.WaitForExit(10000))
             return !IsError;
@@ -40,12 +38,10 @@ public class Controller
             return false;
         }
     }
-    public static bool GenerateBarcodeFile(Symbologies type, string data, ref string output, double xDimMils, int dpi)
+    public static bool SaveBarcode(Symbologies type, string data, string filePath, double xDimMils, int dpi)
     {
-        output = Path.Combine(Directory.GetCurrentDirectory(), output);
-
         IsError = false;
-        var process = LaunchProcess(ZintPath, GetCommand(type, data, output, xDimMils, dpi), Directory.GetCurrentDirectory(), false);
+        var process = LaunchProcess(ZintPath, GetCommand(type, data, filePath, xDimMils, dpi), Directory.GetCurrentDirectory(), false);
 
         if (process.WaitForExit(10000))
             return !IsError;
@@ -56,38 +52,46 @@ public class Controller
         }
     }
 
-    public static bool GenerateBarcodeStdout(Symbologies type, string data, string fileType, double scale)
+    public static byte[]? GetBarcode(Symbologies type, string data, string fileType, double scale)
     {
         IsError = false;
-
-
         var process = LaunchProcess(ZintPath, GetCommandStdout(type, data, fileType, scale), Directory.GetCurrentDirectory(), true);
 
         if (process.WaitForExit(10000))
         {
-            lock (__imgBufLockObj)
-            {
-                StreamReader reader = process.StandardOutput;
-                string output = reader.ReadToEnd();
+            if(IsError)
+                return null;
 
-                imgBuf.Clear();
-                imgBuf.AddRange(Encoding.Unicode.GetBytes(output));
-
-                File.WriteAllBytes("test.png", imgBuf.ToArray());
-            }
-
-            return !IsError;
+            StreamReader reader = process.StandardOutput;
+            string output = reader.ReadToEnd();
+            return Encoding.Unicode.GetBytes(output);
         }
-
         else
         {
             process.Kill();
-            return false;
+            return null;
         }
+    }
 
+    public static byte[]? GetBarcode(Symbologies type, string data, string fileType, double xDimMils, int dpi)
+    {
+        IsError = false;
+        var process = LaunchProcess(ZintPath, GetCommandStdout(type, data, fileType, xDimMils / 1000, dpi), Directory.GetCurrentDirectory(), true);
 
+        if (process.WaitForExit(10000))
+        {
+            if (IsError)
+                return null;
 
-
+            StreamReader reader = process.StandardOutput;
+            string output = reader.ReadToEnd();
+            return Encoding.Unicode.GetBytes(output);
+        }
+        else
+        {
+            process.Kill();
+            return null;
+        }
     }
 
     private static Process LaunchProcess(string file, string arguments, string working, bool noOutData)
