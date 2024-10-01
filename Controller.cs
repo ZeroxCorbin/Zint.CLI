@@ -1,12 +1,19 @@
 ﻿
 using System.Diagnostics;
 using System.IO;
+using System.Security.RightsManagement;
 using System.Text;
 
 namespace Zint.CLI;
 
 public class Controller
 {
+    public class Barcode
+    {
+        public byte[] Data { get; set; }
+        public string CommandArgs { get; set; }
+        public bool IsValid { get; set; }
+    }
     public delegate void OutputHandler(string output, bool isError);
     public static event OutputHandler? OutputReceived;
 
@@ -25,7 +32,7 @@ public class Controller
     public static string GetCommandStdout(Symbologies type, string data, string fileType, double scale) => new Switches().Barcode(type).XDimensionScale(scale).Data(data).DirectStdout(fileType).ToString();
     public static string GetCommandStdout(Symbologies type, string data, string fileType, double mils, int dpi) => new Switches().Barcode(type).XDimensionMils(mils, dpi).Data(data).DirectStdout(fileType).ToString();
 
-    public static bool SaveBarcode(Symbologies type, string data, ref string filePath, double scale)
+    public static bool SaveBarcode(Symbologies type, string data, string filePath, double scale)
     {
         IsError = false;
         var process = LaunchProcess(ZintPath, GetCommand(type, data, filePath, scale), Directory.GetCurrentDirectory(), false);
@@ -52,7 +59,7 @@ public class Controller
         }
     }
 
-    public static byte[]? GetBarcode(Symbologies type, string data, string fileType, double scale)
+    public static byte[]? GetBarcodeBytes(Symbologies type, string data, string fileType, double scale)
     {
         IsError = false;
         var process = LaunchProcess(ZintPath, GetCommandStdout(type, data, fileType, scale), Directory.GetCurrentDirectory(), true);
@@ -73,7 +80,7 @@ public class Controller
         }
     }
 
-    public static byte[]? GetBarcode(Symbologies type, string data, string fileType, double xDimMils, int dpi)
+    public static byte[]? GetBarcodeBytes(Symbologies type, string data, string fileType, double xDimMils, int dpi)
     {
         IsError = false;
         var process = LaunchProcess(ZintPath, GetCommandStdout(type, data, fileType, xDimMils / 1000, dpi), Directory.GetCurrentDirectory(), true);
@@ -91,6 +98,59 @@ public class Controller
         {
             process.Kill();
             return null;
+        }
+    }
+
+    public static Barcode GetBarcode(Symbologies type, string data, string fileType, double scale)
+    {
+        var code = new Barcode();
+        IsError = false;
+
+        code.CommandArgs = GetCommandStdout(type, data, fileType, scale);
+        var process = LaunchProcess(ZintPath, code.CommandArgs, Directory.GetCurrentDirectory(), true);
+
+        if (process.WaitForExit(10000))
+        {
+            if (IsError)
+                return code;
+
+            StreamReader reader = process.StandardOutput;
+            string output = reader.ReadToEnd();
+            code.Data = Encoding.Unicode.GetBytes(output);
+            code.IsValid = !IsError;
+            return code;
+        }
+        else
+        {
+            process.Kill();
+            return code;
+        }
+    }
+
+    public static Barcode GetBarcode(Symbologies type, string data, string fileType, double xDimMils, int dpi)
+    {
+        var code = new Barcode();
+        IsError = false;
+
+        code.CommandArgs = GetCommandStdout(type, data, fileType, xDimMils, dpi);
+        var process = LaunchProcess(ZintPath, code.CommandArgs, Directory.GetCurrentDirectory(), true);
+
+        if (process.WaitForExit(10000))
+        {
+            if (IsError)
+                return code;
+
+            StreamReader reader = process.StandardOutput;
+            string output = reader.ReadToEnd();
+            code.Data = Encoding.Unicode.GetBytes(output);
+            code.IsValid = !IsError;
+
+            return code;
+        }
+        else
+        {
+            process.Kill();
+            return code;
         }
     }
 
@@ -138,6 +198,8 @@ public class Controller
     public static double GetScale(double xdimMils, int dpi) => Math.Round(xdimMils * dpi, MidpointRounding.AwayFromZero) / 2;
     public static double GetScale(double xdimMils, double dpi) => Math.Round(xdimMils * dpi, MidpointRounding.AwayFromZero) / 2;
     public static double GetMils(double scale, int dpi) => (scale / dpi) * 2;
+
+    public static double GetDPI(double xdimMils, double scale) => (scale / xdimMils) * 2;
 
     public static double MMtoMils(double mm) => mm * 39.3701;
     public static double MilsToMM(double mils) => mils / 39.3701;
