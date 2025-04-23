@@ -323,6 +323,8 @@ namespace Zint.CLI
 
         public Switches GS1() { commandLine += $" --gs1 --gs1parens"; return this; }
 
+        public Switches EscapeInput() { commandLine += $" --esc --gssep"; return this; }
+
         public Switches Symbol_DataMatrix(bool? shape) { commandLine += shape == null ? string.Empty : shape == true ? $" --square" : " --dmre"; return this; }
 
     }
