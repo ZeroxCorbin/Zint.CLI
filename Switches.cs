@@ -321,5 +321,9 @@ namespace Zint.CLI
 
         public Switches QueitZones(bool? state) {  commandLine += state == null ? string.Empty : state == true ? $" --quietzones" : $" --noquietzones"; return this; }
 
+        public Switches GS1() { commandLine += $" --gs1 --gs1parens"; return this; }
+
+        public Switches Symbol_DataMatrix(bool? shape) { commandLine += shape == null ? string.Empty : shape == true ? $" --square" : " --dmre"; return this; }
+
     }
 }

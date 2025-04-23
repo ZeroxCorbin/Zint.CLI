@@ -9,51 +9,38 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Zint\zint-2.13.0-win32.zip" />
-    <None Remove="Zint\zint-2.13.0\ChangeLog.txt" />
-    <None Remove="Zint\zint-2.13.0\manual.pdf" />
-    <None Remove="Zint\zint-2.13.0\manual.txt" />
-    <None Remove="Zint\zint-2.13.0\qtZint.exe" />
-    <None Remove="Zint\zint-2.13.0\README.txt" />
-    <None Remove="Zint\zint-2.13.0\tcl\licence.txt" />
-    <None Remove="Zint\zint-2.13.0\tcl\pkgIndex.tcl" />
-    <None Remove="Zint\zint-2.13.0\tcl\readme.txt" />
-    <None Remove="Zint\zint-2.13.0\tcl\zint.dll" />
-    <None Remove="Zint\zint-2.13.0\zint.exe" />
+    <Compile Remove="Zint\zint-2.13.0\**" />
+    <EmbeddedResource Remove="Zint\zint-2.13.0\**" />
+    <None Remove="Zint\zint-2.13.0\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Zint\zint-2.13.0-win32.zip">
+    <None Remove="Zint\zint-2.13.0-win32.zip" />
+    <None Remove="Zint\zint-2.15.0\ChangeLog.txt" />
+    <None Remove="Zint\zint-2.15.0\manual.pdf" />
+    <None Remove="Zint\zint-2.15.0\manual.txt" />
+    <None Remove="Zint\zint-2.15.0\qtZint.exe" />
+    <None Remove="Zint\zint-2.15.0\README.txt" />
+    <None Remove="Zint\zint-2.15.0\zint.exe" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Zint\zint-2.15.0\ChangeLog.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Zint\zint-2.13.0\ChangeLog.txt">
+    <Content Include="Zint\zint-2.15.0\manual.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Zint\zint-2.13.0\manual.pdf">
+    <Content Include="Zint\zint-2.15.0\manual.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Zint\zint-2.13.0\manual.txt">
+    <Content Include="Zint\zint-2.15.0\qtZint.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Zint\zint-2.13.0\qtZint.exe">
+    <Content Include="Zint\zint-2.15.0\README.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Zint\zint-2.13.0\README.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Zint\zint-2.13.0\tcl\licence.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Zint\zint-2.13.0\tcl\pkgIndex.tcl">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Zint\zint-2.13.0\tcl\readme.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Zint\zint-2.13.0\tcl\zint.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Zint\zint-2.13.0\zint.exe">
+    <Content Include="Zint\zint-2.15.0\zint.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

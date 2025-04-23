@@ -9,15 +9,30 @@ public partial class Barcode : ObservableObject
     [ObservableProperty] private Symbologies type;
     [ObservableProperty] private string data;
     [ObservableProperty] private string outPath;
+
+    [ObservableProperty] private double targetDpi;
     [ObservableProperty] private double scale;
 
-    [ObservableProperty] bool? quietZones = null;
+    [ObservableProperty] private bool? quietZones = null;
+    [ObservableProperty] private bool isGs1 = false;
+
+    /// <summary>
+    /// null = Automatic, true = Square, false = Rectangular
+    /// </summary>
+    [ObservableProperty] private bool? dataMatrixShape = true;
 
     public string CommandArgs
     {
         get
         {
-            var args = new Switches().Barcode(Type).XDimensionScale(Scale).Data(Data).Output(OutPath).QueitZones(QuietZones);
+            Switches args = new Switches().Barcode(Type).XDimensionScale(Scale).Data(Data).Output(OutPath).QueitZones(QuietZones);
+
+            if (IsGs1)
+                _ = args.GS1();
+
+            if (Type == Symbologies.BARCODE_DATAMATRIX)
+                _ = args.Symbol_DataMatrix(DataMatrixShape);
+
             return args.ToString();
         }
     }
@@ -44,9 +59,9 @@ public class Controller
     private static object __imgBufLockObj = new();
     private static bool __imgBufLockWasTaken = false;
     private static bool __receivingImage = false;
-    public static string ZintPath { get; } = Path.Combine(Directory.GetCurrentDirectory(), "Zint\\zint-2.13.0\\zint.exe");
+    public static string ZintPath { get; } = Path.Combine(Directory.GetCurrentDirectory(), "Zint\\zint-2.15.0\\zint.exe");
 
-   // public static string GetCommand(Symbologies type, string data, string output, double scale, TriState quiteZones) => new Switches().Barcode(type).XDimensionScale(scale).QueitZones(quiteZones).Data(data).Output(output).ToString();
+    // public static string GetCommand(Symbologies type, string data, string output, double scale, TriState quiteZones) => new Switches().Barcode(type).XDimensionScale(scale).QueitZones(quiteZones).Data(data).Output(output).ToString();
     //public static string GetCommand(Symbologies type, string data, string output, double mils, int dpi) => new Switches().Barcode(type).XDimensionMils(mils, dpi).QueitZones().Data(data).Output(output).ToString();
 
     //public static string GetCommandStdout(Symbologies type, string data, string fileType, double scale) => new Switches().Barcode(type).XDimensionScale(scale).QueitZones().Data(data).DirectStdout(fileType).ToString();
