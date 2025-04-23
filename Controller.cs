@@ -1,7 +1,5 @@
 ﻿
 using System.Diagnostics;
-using System.IO;
-using System.Security.RightsManagement;
 using System.Text;
 
 namespace Zint.CLI;

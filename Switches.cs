@@ -319,5 +319,8 @@ namespace Zint.CLI
         /// <returns> --direct --filetype={fileType}</returns>
         public Switches DirectStdout(string fileType = "png") { commandLine += $" --direct --filetype={fileType}"; return this; }
 
+
+
+
     }
 }
