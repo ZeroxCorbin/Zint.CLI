@@ -2,6 +2,15 @@
 
 namespace Zint.CLI
 {
+    public enum TriState
+    {
+        [Description("Off")]
+        Off = 0,
+        [Description("On")]
+        On = 1,
+        [Description("Auto")]
+        Auto = 2
+    }
     public enum Symbologies
     {
         [Description("Code 11")]

@@ -319,8 +319,7 @@ namespace Zint.CLI
         /// <returns> --direct --filetype={fileType}</returns>
         public Switches DirectStdout(string fileType = "png") { commandLine += $" --direct --filetype={fileType}"; return this; }
 
-
-
+        public Switches QueitZones(bool? state) {  commandLine += state == null ? string.Empty : state == true ? $" --quietzones" : $" --noquietzones"; return this; }
 
     }
 }
