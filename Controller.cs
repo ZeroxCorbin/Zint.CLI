@@ -18,11 +18,11 @@ public class Controller
     private static bool __receivingImage = false;
     public static string ZintPath { get; } = Path.Combine(Directory.GetCurrentDirectory(), "Zint\\zint-2.15.0\\zint.exe");
 
-    // public static string GetCommand(Symbologies type, string data, string output, double scale, TriState quiteZones) => new Switches().Barcode(type).XDimensionScale(scale).QueitZones(quiteZones).Data(data).Output(output).ToString();
-    //public static string GetCommand(Symbologies type, string data, string output, double mils, int dpi) => new Switches().Barcode(type).XDimensionMils(mils, dpi).QueitZones().Data(data).Output(output).ToString();
+    public static string GetCommand(Symbologies type, string data, string output, double scale, TriState quiteZones) => new Switches().Barcode(type).XDimensionScale(scale).QueitZones(quiteZones).Data(data).Output(output).ToString();
+    public static string GetCommand(Symbologies type, string data, string output, double mils, int dpi) => new Switches().Barcode(type).XDimensionMils(mils, dpi).QueitZones().Data(data).Output(output).ToString();
 
-    //public static string GetCommandStdout(Symbologies type, string data, string fileType, double scale) => new Switches().Barcode(type).XDimensionScale(scale).QueitZones().Data(data).DirectStdout(fileType).ToString();
-    //public static string GetCommandStdout(Symbologies type, string data, string fileType, double mils, int dpi) => new Switches().Barcode(type).XDimensionMils(mils, dpi).QueitZones().Data(data).DirectStdout(fileType).ToString();
+    public static string GetCommandStdout(Symbologies type, string data, string fileType, double scale) => new Switches().Barcode(type).XDimensionScale(scale).QueitZones().Data(data).DirectStdout(fileType).ToString();
+    public static string GetCommandStdout(Symbologies type, string data, string fileType, double mils, int dpi) => new Switches().Barcode(type).XDimensionMils(mils, dpi).QueitZones().Data(data).DirectStdout(fileType).ToString();
 
     public static bool SaveBarcode(Barcode barcode)
     {
@@ -37,114 +37,114 @@ public class Controller
             return false;
         }
     }
-    //public static bool SaveBarcode(Symbologies type, string data, string filePath, double xDimMils, int dpi)
-    //{
-    //    IsError = false;
-    //    var process = LaunchProcess(ZintPath, GetCommand(type, data, filePath, xDimMils, dpi), Directory.GetCurrentDirectory(), false);
+    public static bool SaveBarcode(Symbologies type, string data, string filePath, double xDimMils, int dpi)
+    {
+        IsError = false;
+        var process = LaunchProcess(ZintPath, GetCommand(type, data, filePath, xDimMils, dpi), Directory.GetCurrentDirectory(), false);
 
-    //    if (process.WaitForExit(10000))
-    //        return !IsError;
-    //    else
-    //    {
-    //        process.Kill();
-    //        return false;
-    //    }
-    //}
+        if (process.WaitForExit(10000))
+            return !IsError;
+        else
+        {
+            process.Kill();
+            return false;
+        }
+    }
 
-    //public static byte[]? GetBarcodeBytes(Symbologies type, string data, string fileType, double scale)
-    //{
-    //    IsError = false;
-    //    var process = LaunchProcess(ZintPath, GetCommandStdout(type, data, fileType, scale), Directory.GetCurrentDirectory(), true);
+    public static byte[]? GetBarcodeBytes(Symbologies type, string data, string fileType, double scale)
+    {
+        IsError = false;
+        var process = LaunchProcess(ZintPath, GetCommandStdout(type, data, fileType, scale), Directory.GetCurrentDirectory(), true);
 
-    //    if (process.WaitForExit(10000))
-    //    {
-    //        if(IsError)
-    //            return null;
+        if (process.WaitForExit(10000))
+        {
+            if (IsError)
+                return null;
 
-    //        StreamReader reader = process.StandardOutput;
-    //        string output = reader.ReadToEnd();
-    //        return Encoding.Unicode.GetBytes(output);
-    //    }
-    //    else
-    //    {
-    //        process.Kill();
-    //        return null;
-    //    }
-    //}
+            StreamReader reader = process.StandardOutput;
+            string output = reader.ReadToEnd();
+            return Encoding.Unicode.GetBytes(output);
+        }
+        else
+        {
+            process.Kill();
+            return null;
+        }
+    }
 
-    //public static byte[]? GetBarcodeBytes(Symbologies type, string data, string fileType, double xDimMils, int dpi)
-    //{
-    //    IsError = false;
-    //    var process = LaunchProcess(ZintPath, GetCommandStdout(type, data, fileType, xDimMils / 1000, dpi), Directory.GetCurrentDirectory(), true);
+    public static byte[]? GetBarcodeBytes(Symbologies type, string data, string fileType, double xDimMils, int dpi)
+    {
+        IsError = false;
+        var process = LaunchProcess(ZintPath, GetCommandStdout(type, data, fileType, xDimMils / 1000, dpi), Directory.GetCurrentDirectory(), true);
 
-    //    if (process.WaitForExit(10000))
-    //    {
-    //        if (IsError)
-    //            return null;
+        if (process.WaitForExit(10000))
+        {
+            if (IsError)
+                return null;
 
-    //        StreamReader reader = process.StandardOutput;
-    //        string output = reader.ReadToEnd();
-    //        return Encoding.Unicode.GetBytes(output);
-    //    }
-    //    else
-    //    {
-    //        process.Kill();
-    //        return null;
-    //    }
-    //}
+            StreamReader reader = process.StandardOutput;
+            string output = reader.ReadToEnd();
+            return Encoding.Unicode.GetBytes(output);
+        }
+        else
+        {
+            process.Kill();
+            return null;
+        }
+    }
 
-    //public static Barcode GetBarcode(Symbologies type, string data, string fileType, double scale)
-    //{
-    //    var code = new Barcode();
-    //    IsError = false;
+    public static Barcode GetBarcode(Symbologies type, string data, string fileType, double scale)
+    {
+        var code = new Barcode();
+        IsError = false;
 
-    //    code.CommandArgs = GetCommandStdout(type, data, fileType, scale);
-    //    var process = LaunchProcess(ZintPath, code.CommandArgs, Directory.GetCurrentDirectory(), true);
+        code.CommandArgs = GetCommandStdout(type, data, fileType, scale);
+        var process = LaunchProcess(ZintPath, code.CommandArgs, Directory.GetCurrentDirectory(), true);
 
-    //    if (process.WaitForExit(10000))
-    //    {
-    //        if (IsError)
-    //            return code;
+        if (process.WaitForExit(10000))
+        {
+            if (IsError)
+                return code;
 
-    //        StreamReader reader = process.StandardOutput;
-    //        string output = reader.ReadToEnd();
-    //        code.Data = Encoding.Unicode.GetBytes(output);
-    //        code.IsValid = !IsError;
-    //        return code;
-    //    }
-    //    else
-    //    {
-    //        process.Kill();
-    //        return code;
-    //    }
-    //}
+            StreamReader reader = process.StandardOutput;
+            string output = reader.ReadToEnd();
+            code.Data = Encoding.Unicode.GetBytes(output);
+            code.IsValid = !IsError;
+            return code;
+        }
+        else
+        {
+            process.Kill();
+            return code;
+        }
+    }
 
-    //public static Barcode GetBarcode(Symbologies type, string data, string fileType, double xDimMils, int dpi)
-    //{
-    //    var code = new Barcode();
-    //    IsError = false;
+    public static Barcode GetBarcode(Symbologies type, string data, string fileType, double xDimMils, int dpi)
+    {
+        var code = new Barcode();
+        IsError = false;
 
-    //    code.CommandArgs = GetCommandStdout(type, data, fileType, xDimMils, dpi);
-    //    var process = LaunchProcess(ZintPath, code.CommandArgs, Directory.GetCurrentDirectory(), true);
+        code.CommandArgs = GetCommandStdout(type, data, fileType, xDimMils, dpi);
+        var process = LaunchProcess(ZintPath, code.CommandArgs, Directory.GetCurrentDirectory(), true);
 
-    //    if (process.WaitForExit(10000))
-    //    {
-    //        if (IsError)
-    //            return code;
+        if (process.WaitForExit(10000))
+        {
+            if (IsError)
+                return code;
 
-    //        StreamReader reader = process.StandardOutput;
-    //        string output = reader.ReadToEnd();
-    //        code.Data = Encoding.Unicode.GetBytes(output);
-    //        code.IsValid = !IsError;
+            StreamReader reader = process.StandardOutput;
+            string output = reader.ReadToEnd();
+            code.Data = Encoding.Unicode.GetBytes(output);
+            code.IsValid = !IsError;
 
-    //        return code;
-    //    }
-    //    else
-    //    {
-    //        process.Kill();
-    //        return code;
-    //    }
-    //}
+            return code;
+        }
+        else
+        {
+            process.Kill();
+            return code;
+        }
+    }
 
     private static Process LaunchProcess(string file, string arguments, string working, bool noOutData)
     {

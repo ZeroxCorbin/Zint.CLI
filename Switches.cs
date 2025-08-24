@@ -319,13 +319,13 @@ namespace Zint.CLI
         /// <returns> --direct --filetype={fileType}</returns>
         public Switches DirectStdout(string fileType = "png") { commandLine += $" --direct --filetype={fileType}"; return this; }
 
-        public Switches QueitZones(bool? state) {  commandLine += state == null ? string.Empty : state == true ? $" --quietzones" : $" --noquietzones"; return this; }
+        public Switches QueitZones(TriState state = TriState.Auto) {  commandLine += state == TriState.Auto ? string.Empty : state == TriState.On ? $" --quietzones" : $" --noquietzones"; return this; }
 
         public Switches GS1() { commandLine += $" --gs1 --gs1parens"; return this; }
 
         public Switches EscapeInput() { commandLine += $" --esc --gssep"; return this; }
 
-        public Switches Symbol_DataMatrix(bool? shape) { commandLine += shape == null ? string.Empty : shape == true ? $" --square" : " --dmre"; return this; }
+        public Switches Symbol_DataMatrix(TriState shape) { commandLine += shape == TriState.Auto ? string.Empty : shape == TriState.On ? $" --square" : " --dmre"; return this; }
 
     }
 }

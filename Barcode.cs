@@ -12,13 +12,13 @@ public partial class Barcode : ObservableObject
     [ObservableProperty] private double targetDpi;
     [ObservableProperty] private double scale;
 
-    [ObservableProperty] private bool? quietZones = null;
+    [ObservableProperty] private TriState quietZones = TriState.Auto;
     [ObservableProperty] private bool isGs1 = false;
 
     /// <summary>
     /// null = Automatic, true = Square, false = Rectangular
     /// </summary>
-    [ObservableProperty] private bool? dataMatrixShape = true;
+    [ObservableProperty] private TriState dataMatrixShape = TriState.Auto;
 
     public string CommandArgs
     {
@@ -45,5 +45,13 @@ public partial class Barcode : ObservableObject
         Data = data;
         OutPath = outPath;
         Scale = scale;
+    }
+
+    public Barcode()
+    {
+        Type = Symbologies.BARCODE_CODE128;
+        Data = "Hello, World!";
+        OutPath = "barcode.png";
+        Scale = 1.0;
     }
 }
