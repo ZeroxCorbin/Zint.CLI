@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Zint.CLI;
 
@@ -25,8 +20,8 @@ public class ZintController
         barcode.IsValid = false;
         barcode.GeneratedImage = null;
 
-        string outputPath = barcode.OutputPath ?? Path.ChangeExtension(Path.GetTempFileName(), ".png");
-        string arguments = BuildArguments(barcode, outputPath);
+        var outputPath = barcode.OutputPath ?? Path.ChangeExtension(Path.GetTempFileName(), ".png");
+        var arguments = BuildArguments(barcode, outputPath);
 
         var processStartInfo = new ProcessStartInfo
         {
@@ -39,9 +34,9 @@ public class ZintController
         };
 
         using var process = new Process { StartInfo = processStartInfo };
-        process.Start();
+        _ = process.Start();
 
-        string error = await process.StandardError.ReadToEndAsync();
+        var error = await process.StandardError.ReadToEndAsync();
         await process.WaitForExitAsync();
 
         if (process.ExitCode != 0)
@@ -72,89 +67,89 @@ public class ZintController
         var switches = new Switches();
 
         // Core arguments
-        switches.Barcode(barcode.Symbology);
-        switches.Output(outputPath);
+        _ = switches.Barcode(barcode.Symbology);
+        _ = switches.Output(outputPath);
 
         if (!string.IsNullOrEmpty(barcode.InputPath))
         {
-            switches.Input(barcode.InputPath);
+            _ = switches.Input(barcode.InputPath);
         }
         else
         {
-            switches.Data(barcode.Data);
+            _ = switches.Data(barcode.Data);
         }
 
-        if (!string.IsNullOrEmpty(barcode.PrimaryData)) switches.Primary(barcode.PrimaryData);
+        if (!string.IsNullOrEmpty(barcode.PrimaryData)) _ = switches.Primary(barcode.PrimaryData);
 
         // Sizing and Appearance
-        if (barcode.Height.HasValue) switches.Height(barcode.Height.Value);
-        if (barcode.Scale.HasValue) switches.Scale(barcode.Scale.Value);
-        if (!string.IsNullOrEmpty(barcode.ScaleXDimDp)) switches.ScaleXDimDp(barcode.ScaleXDimDp);
-        if (barcode.BorderWidth.HasValue) switches.Border(barcode.BorderWidth.Value);
-        if (barcode.Whitespace.HasValue) switches.Whitespace(barcode.Whitespace.Value);
-        if (barcode.VerticalWhitespace.HasValue) switches.VWhitespace(barcode.VerticalWhitespace.Value);
-        if (barcode.RotationAngle.HasValue) switches.Rotate(barcode.RotationAngle.Value);
-        if (barcode.BindBars) switches.Bind();
-        if (barcode.AddBox) switches.Box();
-        if (barcode.CompliantHeight) switches.CompliantHeight();
-        if (barcode.HeightPerRow) switches.HeightPerRow();
-        if (barcode.BindTop) switches.BindTop();
-        if (barcode.DottyMode) switches.Dotty();
-        if (barcode.DotSize.HasValue) switches.DotSize(barcode.DotSize.Value);
-        if (barcode.Columns.HasValue) switches.Cols(barcode.Columns.Value);
-        if (barcode.Rows.HasValue) switches.Rows(barcode.Rows.Value);
-        if (barcode.SeparatorHeight.HasValue) switches.Separator(barcode.SeparatorHeight.Value);
+        if (barcode.Height.HasValue) _ = switches.Height(barcode.Height.Value);
+
+        if (!string.IsNullOrEmpty(barcode.ScaleXDimDp)) _ = switches.ScaleXDimDp(barcode.ScaleXDimDp);
+        else if (barcode.Scale.HasValue) _ = switches.Scale(barcode.Scale.Value);
+        if (barcode.BorderWidth.HasValue) _ = switches.Border(barcode.BorderWidth.Value);
+        if (barcode.Whitespace.HasValue) _ = switches.Whitespace(barcode.Whitespace.Value);
+        if (barcode.VerticalWhitespace.HasValue) _ = switches.VWhitespace(barcode.VerticalWhitespace.Value);
+        if (barcode.RotationAngle.HasValue) _ = switches.Rotate(barcode.RotationAngle.Value);
+        if (barcode.BindBars) _ = switches.Bind();
+        if (barcode.AddBox) _ = switches.Box();
+        if (barcode.CompliantHeight) _ = switches.CompliantHeight();
+        if (barcode.HeightPerRow) _ = switches.HeightPerRow();
+        if (barcode.BindTop) _ = switches.BindTop();
+        if (barcode.DottyMode) _ = switches.Dotty();
+        if (barcode.DotSize.HasValue) _ = switches.DotSize(barcode.DotSize.Value);
+        if (barcode.Columns.HasValue) _ = switches.Cols(barcode.Columns.Value);
+        if (barcode.Rows.HasValue) _ = switches.Rows(barcode.Rows.Value);
+        if (barcode.SeparatorHeight.HasValue) _ = switches.Separator(barcode.SeparatorHeight.Value);
 
         // Coloring
-        if (barcode.ForegroundColor.HasValue) switches.Foreground(ColorToHex(barcode.ForegroundColor.Value));
-        if (barcode.BackgroundColor.HasValue) switches.Background(ColorToHex(barcode.BackgroundColor.Value));
-        if (barcode.ReverseColors) switches.Reverse();
-        if (barcode.NoBackground) switches.NoBackground();
-        if (barcode.UseCmyk) switches.Cmyk();
+        if (barcode.ForegroundColor.HasValue) _ = switches.Foreground(ColorToHex(barcode.ForegroundColor.Value));
+        if (barcode.BackgroundColor.HasValue) _ = switches.Background(ColorToHex(barcode.BackgroundColor.Value));
+        if (barcode.ReverseColors) _ = switches.Reverse();
+        if (barcode.NoBackground) _ = switches.NoBackground();
+        if (barcode.UseCmyk) _ = switches.Cmyk();
 
         // Text and Font
-        if (barcode.HideText) switches.NoText();
-        if (barcode.BoldText) switches.Bold();
-        if (barcode.SmallText) switches.Small();
-        if (barcode.TextGap.HasValue) switches.TextGap(barcode.TextGap.Value);
-        if (barcode.EmbedFont) switches.EmbedFont();
-        if (barcode.AddOnGap.HasValue) switches.AddOnGap(barcode.AddOnGap.Value);
-        if (barcode.GuardWhitespace) switches.GuardWhitespace();
-        if (barcode.GuardDescent.HasValue) switches.GuardDescent(barcode.GuardDescent.Value);
+        if (barcode.HideText) _ = switches.NoText();
+        if (barcode.BoldText) _ = switches.Bold();
+        if (barcode.SmallText) _ = switches.Small();
+        if (barcode.TextGap.HasValue) _ = switches.TextGap(barcode.TextGap.Value);
+        if (barcode.EmbedFont) _ = switches.EmbedFont();
+        if (barcode.AddOnGap.HasValue) _ = switches.AddOnGap(barcode.AddOnGap.Value);
+        if (barcode.GuardWhitespace) _ = switches.GuardWhitespace();
+        if (barcode.GuardDescent.HasValue) _ = switches.GuardDescent(barcode.GuardDescent.Value);
 
         // Flags
-        if (barcode.ProcessTilde) switches.EscapeInput();
-        if (barcode.IsGs1Data) switches.GS1();
-        if (barcode.BinaryMode) switches.Binary();
-        if (barcode.Eci.HasValue) switches.Eci(barcode.Eci.Value);
-        if (barcode.Gs1Separator) switches.Gs1Separator();
+        if (barcode.ProcessTilde) _ = switches.EscapeInput();
+        if (barcode.IsGs1Data && !IsImplicitGs1Symbology(barcode.Symbology)) _ = switches.GS1();
+        if (barcode.BinaryMode) _ = switches.Binary();
+        if (barcode.Eci.HasValue) _ = switches.Eci(barcode.Eci.Value);
+        if (barcode.Gs1Separator) _ = switches.Gs1Separator();
         if (barcode.QuietZones.HasValue)
         {
             if (barcode.QuietZones.Value)
             {
-                switches.QuietZones();
+                _ = switches.QuietZones();
             }
             else
             {
-                switches.NoQuietZones();
+                _ = switches.NoQuietZones();
             }
         }
-        if (barcode.ForceSquare) switches.Square();
-        if (barcode.Gs1Parens) switches.Gs1Parens();
-        if (barcode.Version.HasValue) switches.Vers(barcode.Version.Value);
-        if (barcode.SecurityLevel.HasValue) switches.Secure(barcode.SecurityLevel.Value);
-        if (barcode.Mask.HasValue) switches.Mask(barcode.Mask.Value);
-        if (barcode.Scmvv.HasValue) switches.Scmvv(barcode.Scmvv.Value);
-        if (barcode.Mode.HasValue) switches.Mode(barcode.Mode.Value);
-        if (barcode.UseDmre) switches.Dmre();
-        if (barcode.UseDmIso144) switches.DmIso144();
-        if (barcode.UseFastEncoding) switches.Fast();
-        if (barcode.UseFullMultibyte) switches.FullMultibyte();
-        if (barcode.ReaderInitialization) switches.Init();
-
+        if (barcode.ForceSquare) _ = switches.Square();
+        if (barcode.Gs1Parens) _ = switches.Gs1Parens();
+        if (barcode.Version.HasValue) _ = switches.Vers(barcode.Version.Value);
+        if (barcode.SecurityLevel.HasValue) _ = switches.Secure(barcode.SecurityLevel.Value);
+        if (barcode.Mask.HasValue) _ = switches.Mask(barcode.Mask.Value);
+        if (barcode.Scmvv.HasValue) _ = switches.Scmvv(barcode.Scmvv.Value);
+        if (barcode.Mode.HasValue) _ = switches.Mode(barcode.Mode.Value);
+        if (barcode.UseDmre) _ = switches.Dmre();
+        if (barcode.UseDmIso144) _ = switches.DmIso144();
+        if (barcode.UseFastEncoding) _ = switches.Fast();
+        if (barcode.UseFullMultibyte) _ = switches.FullMultibyte();
+        if (barcode.ReaderInitialization) _ = switches.Init();
 
         // Advanced Options
-        string arguments = switches.ToString();
+        var arguments = switches.ToString();
         if (!string.IsNullOrWhiteSpace(barcode.AdvancedOptions))
         {
             arguments += $" {barcode.AdvancedOptions}";
@@ -162,6 +157,26 @@ public class ZintController
 
         return arguments;
     }
+
+    private bool IsImplicitGs1Symbology(Symbologies symbology) => symbology switch
+    {
+        Symbologies.Ean128 => true,
+        Symbologies.Gs1_128 => true,
+        Symbologies.Gs1DataBar => true,
+        Symbologies.Gs1DataBarLimited => true,
+        Symbologies.Gs1DataBarExpanded => true,
+        Symbologies.Gs1DataBarStacked => true,
+        Symbologies.Gs1DataBarStackedOmnidirectional => true,
+        Symbologies.Gs1DataBarExpandedStacked => true,
+        Symbologies.Gs1_128_Composite => true,
+        Symbologies.Gs1DataBar_Composite => true,
+        Symbologies.Gs1DataBarLimited_Composite => true,
+        Symbologies.Gs1DataBarExpanded_Composite => true,
+        Symbologies.Gs1DataBarStacked_Composite => true,
+        Symbologies.Gs1DataBarStackedOmni_Composite => true,
+        Symbologies.Gs1DataBarExpandedStacked_Composite => true,
+        _ => false,
+    };
 
     private string ColorToHex(Color c) => $"{c.R:X2}{c.G:X2}{c.B:X2}";
 }
