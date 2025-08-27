@@ -13,20 +13,7 @@ namespace Zint.CLI;
 /// </summary>
 public class ZintController
 {
-    private readonly string _zintExecutablePath;
-
-    /// <summary>
-    /// Initializes a new instance of the ZintController.
-    /// </summary>
-    /// <param name="zintExecutablePath">The full path to Zint.exe.</param>
-    public ZintController(string zintExecutablePath)
-    {
-        if (!File.Exists(zintExecutablePath))
-        {
-            throw new FileNotFoundException("Zint executable not found at the specified path.", zintExecutablePath);
-        }
-        _zintExecutablePath = zintExecutablePath;
-    }
+    private readonly string _zintExecutablePath = Path.Combine(Directory.GetCurrentDirectory(), "Zint\\zint-2.15.0\\zint.exe");
 
     /// <summary>
     /// Asynchronously generates a barcode image using the provided settings.
@@ -97,9 +84,12 @@ public class ZintController
             switches.Data(barcode.Data);
         }
 
+        if (!string.IsNullOrEmpty(barcode.PrimaryData)) switches.Primary(barcode.PrimaryData);
+
         // Sizing and Appearance
         if (barcode.Height.HasValue) switches.Height(barcode.Height.Value);
         if (barcode.Scale.HasValue) switches.Scale(barcode.Scale.Value);
+        if (!string.IsNullOrEmpty(barcode.ScaleXDimDp)) switches.ScaleXDimDp(barcode.ScaleXDimDp);
         if (barcode.BorderWidth.HasValue) switches.Border(barcode.BorderWidth.Value);
         if (barcode.Whitespace.HasValue) switches.Whitespace(barcode.Whitespace.Value);
         if (barcode.VerticalWhitespace.HasValue) switches.VWhitespace(barcode.VerticalWhitespace.Value);
@@ -109,6 +99,11 @@ public class ZintController
         if (barcode.CompliantHeight) switches.CompliantHeight();
         if (barcode.HeightPerRow) switches.HeightPerRow();
         if (barcode.BindTop) switches.BindTop();
+        if (barcode.DottyMode) switches.Dotty();
+        if (barcode.DotSize.HasValue) switches.DotSize(barcode.DotSize.Value);
+        if (barcode.Columns.HasValue) switches.Cols(barcode.Columns.Value);
+        if (barcode.Rows.HasValue) switches.Rows(barcode.Rows.Value);
+        if (barcode.SeparatorHeight.HasValue) switches.Separator(barcode.SeparatorHeight.Value);
 
         // Coloring
         if (barcode.ForegroundColor.HasValue) switches.Foreground(ColorToHex(barcode.ForegroundColor.Value));
@@ -123,6 +118,9 @@ public class ZintController
         if (barcode.SmallText) switches.Small();
         if (barcode.TextGap.HasValue) switches.TextGap(barcode.TextGap.Value);
         if (barcode.EmbedFont) switches.EmbedFont();
+        if (barcode.AddOnGap.HasValue) switches.AddOnGap(barcode.AddOnGap.Value);
+        if (barcode.GuardWhitespace) switches.GuardWhitespace();
+        if (barcode.GuardDescent.HasValue) switches.GuardDescent(barcode.GuardDescent.Value);
 
         // Flags
         if (barcode.ProcessTilde) switches.EscapeInput();
@@ -130,8 +128,29 @@ public class ZintController
         if (barcode.BinaryMode) switches.Binary();
         if (barcode.Eci.HasValue) switches.Eci(barcode.Eci.Value);
         if (barcode.Gs1Separator) switches.Gs1Separator();
-        switches.QuietZones(barcode.QuietZones);
-        if (barcode.ForceSquare) switches.Symbol_DataMatrix(TriState.On);
+        if (barcode.QuietZones.HasValue)
+        {
+            if (barcode.QuietZones.Value)
+            {
+                switches.QuietZones();
+            }
+            else
+            {
+                switches.NoQuietZones();
+            }
+        }
+        if (barcode.ForceSquare) switches.Square();
+        if (barcode.Gs1Parens) switches.Gs1Parens();
+        if (barcode.Version.HasValue) switches.Vers(barcode.Version.Value);
+        if (barcode.SecurityLevel.HasValue) switches.Secure(barcode.SecurityLevel.Value);
+        if (barcode.Mask.HasValue) switches.Mask(barcode.Mask.Value);
+        if (barcode.Scmvv.HasValue) switches.Scmvv(barcode.Scmvv.Value);
+        if (barcode.Mode.HasValue) switches.Mode(barcode.Mode.Value);
+        if (barcode.UseDmre) switches.Dmre();
+        if (barcode.UseDmIso144) switches.DmIso144();
+        if (barcode.UseFastEncoding) switches.Fast();
+        if (barcode.UseFullMultibyte) switches.FullMultibyte();
+        if (barcode.ReaderInitialization) switches.Init();
 
 
         // Advanced Options

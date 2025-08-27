@@ -105,6 +105,14 @@ namespace Zint.CLI
         /// <returns> --input=\"{path}\"</returns>
         public Switches Input(string path) { commandLine += $" --input=\"{path}\""; return this; }
 
+        /// <summary>
+        /// For MaxiCode, set the content of the primary message. For GS1 Composite
+        /// symbols, set the content of the linear symbol.
+        /// </summary>
+        /// <param name="data">Primary message data</param>
+        /// <returns> --primary="{data}"</returns>
+        public Switches Primary(string data) { commandLine += $" --primary=\"{data}\""; return this; }
+
         //4.2 Directing Output
 
         /// <summary>
@@ -265,6 +273,18 @@ namespace Zint.CLI
         /// <returns> --vwhitesp={whitespace}</returns>
         public Switches VWhitespace(int whitespace) { commandLine += $" --vwhitesp={whitespace}"; return this; }
 
+        /// <summary>
+        /// Adds quiet zones compliant with the symbology’s specification.
+        /// </summary>
+        /// <returns> --quietzones</returns>
+        public Switches QuietZones() { commandLine += " --quietzones"; return this; }
+
+        /// <summary>
+        /// Disables quiet zones for symbols that have them by default.
+        /// </summary>
+        /// <returns> --noquietzones</returns>
+        public Switches NoQuietZones() { commandLine += " --noquietzones"; return this; }
+
         //4.6 Adding Boundary Bars and Boxes
 
         /// <summary>
@@ -380,6 +400,7 @@ namespace Zint.CLI
         /// <param name="resolution">Resolution in dpmm or dpi.</param>
         /// <returns>--scalexdimdp={xDimension},{resolution}</returns>
         public Switches ScaleXDimDp(string xDimension, string resolution) { commandLine += $" --scalexdimdp={xDimension},{resolution}"; return this; }
+        public Switches ScaleXDimDp(string value) { commandLine += $" --scalexdimdp={value}"; return this; }
 
         //4.10 Human Readable Text (HRT) Options
 
@@ -417,6 +438,26 @@ namespace Zint.CLI
         /// <returns> --embedfont</returns>
         public Switches EmbedFont() { commandLine += " --embedfont"; return this; }
 
+        /// <summary>
+        /// For EAN/UPC symbologies, set the gap between the main data and the add-on.
+        /// </summary>
+        /// <param name="gap">Gap in X-dimensions (7-12 or 9-12 for UPC-A)</param>
+        /// <returns> --addongap={gap}</returns>
+        public Switches AddOnGap(int gap) { commandLine += $" --addongap={gap}"; return this; }
+
+        /// <summary>
+        /// For EAN/UPC symbols, add quiet zone indicators "<" and/or ">" to HRT where applicable.
+        /// </summary>
+        /// <returns> --guardwhitespace</returns>
+        public Switches GuardWhitespace() { commandLine += " --guardwhitespace"; return this; }
+
+        /// <summary>
+        /// For EAN/UPC symbols, set the height the guard bars descend below the main bars.
+        /// </summary>
+        /// <param name="height">Height in X-dimensions</param>
+        /// <returns> --guarddescent={height}</returns>
+        public Switches GuardDescent(double height) { commandLine += $" --guarddescent={height}"; return this; }
+
         //4.11 Input Modes
 
         /// <summary>
@@ -445,6 +486,12 @@ namespace Zint.CLI
         /// <param name="eci">ECI value</param>
         /// <returns> --eci={eci}</returns>
         public Switches Eci(int eci) { commandLine += $" --eci={eci}"; return this; }
+
+        /// <summary>
+        /// Process parentheses "()" as GS1 AI delimiters, rather than square brackets "[]".
+        /// </summary>
+        /// <returns> --gs1parens</returns>
+        public Switches Gs1Parens() { commandLine += " --gs1parens"; return this; }
 
         //4.12 Batch Processing
 
@@ -564,7 +611,90 @@ namespace Zint.CLI
         /// <returns> --gssep</returns>
         public Switches Gs1Separator() { commandLine += " --gssep"; return this; }
 
-        public Switches Symbol_DataMatrix(TriState shape) { commandLine += shape == TriState.Auto ? string.Empty : shape == TriState.On ? $" --square" : " --dmre"; return this; }
+        /// <summary>
+        /// For Data Matrix symbols, exclude rectangular sizes when considering automatic sizes.
+        /// </summary>
+        /// <returns> --square</returns>
+        public Switches Square() { commandLine += " --square"; return this; }
 
+        /// <summary>
+        /// Set the number of data columns in the symbol.
+        /// </summary>
+        /// <param name="columns">Number of columns</param>
+        /// <returns> --cols={columns}</returns>
+        public Switches Cols(int columns) { commandLine += $" --cols={columns}"; return this; }
+
+        /// <summary>
+        /// Set the number of rows for the symbol.
+        /// </summary>
+        /// <param name="rows">Number of rows</param>
+        /// <returns> --rows={rows}</returns>
+        public Switches Rows(int rows) { commandLine += $" --rows={rows}"; return this; }
+
+        /// <summary>
+        /// Set the height of row separator bars for stacked symbologies.
+        /// </summary>
+        /// <param name="height">Height in X-dimensions</param>
+        /// <returns> --separator={height}</returns>
+        public Switches Separator(int height) { commandLine += $" --separator={height}"; return this; }
+
+        /// <summary>
+        /// Set the symbol version (size, check digits, etc.).
+        /// </summary>
+        /// <param name="version">Version number</param>
+        /// <returns> --vers={version}</returns>
+        public Switches Vers(int version) { commandLine += $" --vers={version}"; return this; }
+
+        /// <summary>
+        /// Set the error correction level.
+        /// </summary>
+        /// <param name="level">Error correction level</param>
+        /// <returns> --secure={level}</returns>
+        public Switches Secure(int level) { commandLine += $" --secure={level}"; return this; }
+
+        /// <summary>
+        /// Set the masking pattern for DotCode, Han Xin, or QR Code.
+        /// </summary>
+        /// <param name="mask">Mask pattern number</param>
+        /// <returns> --mask={mask}</returns>
+        public Switches Mask(int mask) { commandLine += $" --mask={mask}"; return this; }
+
+        /// <summary>
+        /// For MaxiCode, prefix the Structured Carrier Message (SCM).
+        /// </summary>
+        /// <param name="vv">2-digit integer</param>
+        /// <returns> --scmvv={vv}</returns>
+        public Switches Scmvv(int vv) { commandLine += $" --scmvv={vv}"; return this; }
+
+        /// <summary>
+        /// For MaxiCode and GS1 Composite symbols, set the encoding mode.
+        /// </summary>
+        /// <param name="mode">Encoding mode</param>
+        /// <returns> --mode={mode}</returns>
+        public Switches Mode(int mode) { commandLine += $" --mode={mode}"; return this; }
+
+        /// <summary>
+        /// For Data Matrix symbols, allow Data Matrix Rectangular Extended (DMRE) sizes.
+        /// </summary>
+        /// <returns> --dmre</returns>
+        public Switches Dmre() { commandLine += " --dmre"; return this; }
+
+        /// <summary>
+        /// For Data Matrix symbols, use the standard ISO/IEC codeword placement for 144x144 symbols.
+        /// </summary>
+        /// <returns> --dmiso144</returns>
+        public Switches DmIso144() { commandLine += " --dmiso144"; return this; }
+
+        /// <summary>
+        /// Use faster if less optimal encodation or other shortcuts.
+        /// </summary>
+        /// <returns> --fast</returns>
+        public Switches Fast() { commandLine += " --fast"; return this; }
+
+        /// <summary>
+        /// Create a Reader Initialisation (Programming) symbol.
+        /// </summary>
+        /// <returns> --init</returns>
+        public Switches Init() { commandLine += " --init"; return this; }
     }
 }
