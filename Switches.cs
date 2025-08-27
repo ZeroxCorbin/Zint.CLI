@@ -1,5 +1,4 @@
-﻿
-using System.Reflection.Metadata;
+﻿using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
 
 namespace Zint.CLI
@@ -166,7 +165,7 @@ namespace Zint.CLI
         /// </summary>
         /// <param name="path"></param>
         /// <returns> --barcode=\"{type}\"</returns>
-        public Switches Barcode(Symbologies type) { commandLine += $" --barcode=\"{type}\""; return this; }
+        public Switches Barcode(Symbologies type) { commandLine += $" --barcode={(int)type}"; return this; }
 
         //4.4 Adjusting Height
 
@@ -180,16 +179,16 @@ namespace Zint.CLI
         /// </summary>
         /// <param name="height"></param>
         /// <returns> --height={height}</returns>
-        public Switches Height(int height) { commandLine += $" --height={height}"; return this; }
+        public Switches Height(double height) { commandLine += $" --height={height}"; return this; }
 
         /// <summary>
-        /// The default height of most linear barcodes is 50X, but this can be changed for
+        /// The default height of most linear barcodes is 50.0X, but this can be changed for
         /// barcodes whose specifications give a standard height by using the switch
         /// --compliantheight. For instance
         ///
         ///    zint -b LOGMARS -d "This Text" --compliantheight
         ///
-        /// will produce a barcode of height 45.455X instead of the normal default of 50X.
+        /// will produce a barcode of height 45.455X instead of the normal default of 50.0X.
         /// The flag also causes Zint to return a warning if a non-compliant height is
         /// given:
         ///
@@ -198,6 +197,7 @@ namespace Zint.CLI
         /// </summary>
         /// <returns> --compliantheight</returns>
         public Switches CompliantHeight() { commandLine += $" --compliantheight"; return this; }
+
         /// <summary>
         /// Another switch is --heightperrow, which can be useful for symbologies that have
         /// a variable number of linear rows, namely Codablock-F, Code 16K, Code 49, GS1
@@ -267,7 +267,83 @@ namespace Zint.CLI
 
         //4.6 Adding Boundary Bars and Boxes
 
+        /// <summary>
+        /// Zint allows the symbol to be bound with ‘boundary bars’ (also known as ‘bearer
+        /// bars’) using the option --bind. These bars help to prevent misreading of the
+        /// symbol by corrupting a scan if the scanning beam strays off the top or bottom of
+        /// the symbol.
+        /// </summary>
+        /// <returns> --bind</returns>
+        public Switches Bind() { commandLine += " --bind"; return this; }
+
+        /// <summary>
+        /// Zint can also put a border right around the symbol and its
+        /// horizontal whitespace with the --box option.
+        /// </summary>
+        /// <returns> --box</returns>
+        public Switches Box() { commandLine += " --box"; return this; }
+
+        /// <summary>
+        /// The width of the boundary bars or box borders, in integral multiples of the
+        /// X-dimension, must be specified using the --border switch. For example:
+        ///
+        ///     zint --box --border=10 -w 10 -d "This Text"
+        ///
+        /// gives a box with a width 10 times the X-dimension of the symbol. Note that when
+        /// specifying a box, horizontal whitespace is usually required in order to create a
+        /// quiet zone between the barcode and the sides of the box.
+        /// </summary>
+        /// <param name="width">Width in X-dimensions</param>
+        /// <returns> --border={width}</returns>
+        public Switches Border(int width) { commandLine += $" --border={width}"; return this; }
+
+        /// <summary>
+        /// To add a boundary bar to the top only use --bindtop.
+        /// </summary>
+        /// <returns> --bindtop</returns>
+        public Switches BindTop() { commandLine += " --bindtop"; return this; }
+
         //4.7 Using Colour
+
+        /// <summary>
+        /// The -r or --reverse switch allows the default colours
+        /// to be inverted so that a white symbol is shown on a black background (known as
+        /// “reflectance reversal” or “reversed reflectance”).
+        /// </summary>
+        /// <returns> --reverse</returns>
+        public Switches Reverse() { commandLine += " --reverse"; return this; }
+
+        /// <summary>
+        /// The foreground (ink) colour can be specified using the --fg option followed by a
+        /// number in "RRGGBB" or "RRGGBBAA" hexadecimal notation or in "C,M,Y,K" decimal
+        /// percentages format.
+        /// </summary>
+        /// <param name="colour">Colour string</param>
+        /// <returns> --fg={colour}</returns>
+        public Switches Foreground(string colour) { commandLine += $" --fg={colour}"; return this; }
+
+        /// <summary>
+        /// The background (paper) colour can be specified using the --bg option followed by a
+        /// number in "RRGGBB" or "RRGGBBAA" hexadecimal notation or in "C,M,Y,K" decimal
+        /// percentages format.
+        /// </summary>
+        /// <param name="colour">Colour string</param>
+        /// <returns> --bg={colour}</returns>
+        public Switches Background(string colour) { commandLine += $" --bg={colour}"; return this; }
+
+        /// <summary>
+        /// The --nobackground option will remove the background from all output
+        /// formats except BMP.
+        /// </summary>
+        /// <returns> --nobackground</returns>
+        public Switches NoBackground() { commandLine += " --nobackground"; return this; }
+
+        /// <summary>
+        /// The --cmyk option is specific to output in Encapsulated PostScript (EPS) and
+        /// TIF, and selects the CMYK colour space.
+        /// </summary>
+        /// <returns> --cmyk</returns>
+        public Switches Cmyk() { commandLine += " --cmyk"; return this; }
 
         //4.8 Rotating the Symbol
 
@@ -289,10 +365,104 @@ namespace Zint.CLI
 
         //4.9 Adjusting Image Size (X-dimension)
 
-        public Switches XDimensionMM(double xDimensionMM, int dpi) { commandLine += $" --scalexdimdp={xDimensionMM:F2}mm,{dpi}dpi"; return this; }
-        public Switches XDimensionMils(double xDimensionMils, int dpi) { commandLine += $" --scalexdimdp={xDimensionMils:F4}in,{dpi}dpi"; return this; }
-        public Switches XDimensionPixels(double xDimensionPixels) { commandLine += $" --scale={xDimensionPixels / 2}"; return this; }
-        public Switches XDimensionScale(double scale) { commandLine += $" --scale={scale}"; return this; }
+        /// <summary>
+        /// The size of the image can be altered using the --scale option, which sets the
+        /// X-dimension. The default scale is 1.0.
+        /// </summary>
+        /// <param name="scale">The scaling factor.</param>
+        /// <returns> --scale={scale}</returns>
+        public Switches Scale(double scale) { commandLine += $" --scale={scale}"; return this; }
+
+        /// <summary>
+        // An alternative way to specify the scale is to specify measurable units using the --scalexdimdp option.
+        /// </summary>
+        /// <param name="xDimension">X-dimension in mm or in.</param>
+        /// <param name="resolution">Resolution in dpmm or dpi.</param>
+        /// <returns>--scalexdimdp={xDimension},{resolution}</returns>
+        public Switches ScaleXDimDp(string xDimension, string resolution) { commandLine += $" --scalexdimdp={xDimension},{resolution}"; return this; }
+
+        //4.10 Human Readable Text (HRT) Options
+
+        /// <summary>
+        /// For linear barcodes the text present in the output image can be removed by
+        /// using the --notext option.
+        /// </summary>
+        /// <returns> --notext</returns>
+        public Switches NoText() { commandLine += " --notext"; return this; }
+
+        /// <summary>
+        /// Text can be set to bold using the --bold option.
+        /// </summary>
+        /// <returns> --bold</returns>
+        public Switches Bold() { commandLine += " --bold"; return this; }
+
+        /// <summary>
+        /// A smaller font can be substituted using the --small option.
+        /// </summary>
+        /// <returns> --small</returns>
+        public Switches Small() { commandLine += " --small"; return this; }
+
+        /// <summary>
+        /// The gap between the barcode and the text can be adjusted using the --textgap
+        /// option, where the gap is given in X-dimensions.
+        /// </summary>
+        /// <param name="gap">Gap in X-dimensions (-5.0 to 10.0)</param>
+        /// <returns> --textgap={gap}</returns>
+        public Switches TextGap(double gap) { commandLine += $" --textgap={gap}"; return this; }
+
+        /// <summary>
+        /// For SVG output, the font can be embedded in the file for portability using the
+        /// --embedfont option.
+        /// </summary>
+        /// <returns> --embedfont</returns>
+        public Switches EmbedFont() { commandLine += " --embedfont"; return this; }
+
+        //4.11 Input Modes
+
+        /// <summary>
+        /// To encode GS1 data use the --gs1 option.
+        /// </summary>
+        /// <returns> --gs1</returns>
+        public Switches GS1() { commandLine += " --gs1"; return this; }
+
+        /// <summary>
+        /// The --binary option encodes the input data as given.
+        /// </summary>
+        /// <returns> --binary</returns>
+        public Switches Binary() { commandLine += " --binary"; return this; }
+
+        /// <summary>
+        /// The --fullmultibyte option uses the multibyte modes of QR Code, Micro QR Code,
+        /// Rectangular Micro QR Code, Han Xin Code and Grid Matrix for non-ASCII data,
+        /// maximizing density.
+        /// </summary>
+        /// <returns> --fullmultibyte</returns>
+        public Switches FullMultibyte() { commandLine += " --fullmultibyte"; return this; }
+
+        /// <summary>
+        /// The ECI value may be specified with the --eci switch.
+        /// </summary>
+        /// <param name="eci">ECI value</param>
+        /// <returns> --eci={eci}</returns>
+        public Switches Eci(int eci) { commandLine += $" --eci={eci}"; return this; }
+
+        //4.12 Batch Processing
+
+        /// <summary>
+        /// Data can be batch processed by reading from a text file and producing a separate
+        /// barcode image for each line of text in that file. To do this use the --batch
+        /// switch together with -i to select the input file from which to read data.
+        /// </summary>
+        /// <returns> --batch</returns>
+        public Switches Batch() { commandLine += " --batch"; return this; }
+
+        /// <summary>
+        /// The --mirror option instructs Zint to use the data to be encoded as an indicator
+        /// of the filename to be used. This is particularly useful if you are processing
+        /// batch data.
+        /// </summary>
+        /// <returns> --mirror</returns>
+        public Switches Mirror() { commandLine += " --mirror"; return this; }
 
         //4.13 Direct Output to stdout
 
@@ -319,11 +489,80 @@ namespace Zint.CLI
         /// <returns> --direct --filetype={fileType}</returns>
         public Switches DirectStdout(string fileType = "png") { commandLine += $" --direct --filetype={fileType}"; return this; }
 
-        public Switches QueitZones(TriState state = TriState.Auto) {  commandLine += state == TriState.Auto ? string.Empty : state == TriState.On ? $" --quietzones" : $" --noquietzones"; return this; }
+        //4.14 Automatic Filenames
 
-        public Switches GS1() { commandLine += $" --gs1 --gs1parens"; return this; }
+        /// <summary>
+        /// To set the output file format use the --filetype option.
+        /// </summary>
+        /// <param name="fileType">File type extension (png, svg, etc.)</param>
+        /// <returns> --filetype={fileType}</returns>
+        public Switches FileType(string fileType) { commandLine += $" --filetype={fileType}"; return this; }
 
-        public Switches EscapeInput() { commandLine += $" --esc --gssep"; return this; }
+        //4.15 Working with Dots
+
+        /// <summary>
+        /// Matrix codes can be rendered as a series of dots or circles rather than the
+        /// normal squares by using the --dotty option.
+        /// </summary>
+        /// <returns> --dotty</returns>
+        public Switches Dotty() { commandLine += " --dotty"; return this; }
+
+        /// <summary>
+        /// The size of the dots can be adjusted using the --dotsize option followed by the
+        /// diameter of the dot, where that diameter is in X-dimensions.
+        /// </summary>
+        /// <param name="size">Dot diameter in X-dimensions (0.01 to 20)</param>
+        /// <returns> --dotsize={size}</returns>
+        public Switches DotSize(double size) { commandLine += $" --dotsize={size}"; return this; }
+
+        //4.16 Multiple Segments
+
+        /// <summary>
+        /// If you need to specify different ECIs for different sections of the input data,
+        /// the --seg1 to --seg9 options can be used. Each option is of the form
+        /// --segN=ECI,data where ECI is the ECI code and data is
+        /// the data to which this applies.
+        /// </summary>
+        /// <param name="segmentNumber">Segment number (1-9)</param>
+        /// <param name="eci">ECI code</param>
+        /// <param name="data">Data for the segment</param>
+        /// <returns> --seg{segmentNumber}={eci},"{data}"</returns>
+        public Switches Segment(int segmentNumber, int eci, string data) { commandLine += $" --seg{segmentNumber}={eci},\"{data}\""; return this; }
+
+        //4.17 Structured Append
+
+        /// <summary>
+        /// The --structapp option marks a symbol as part of a Structured Append sequence,
+        /// and has the format --structapp=I,C[,ID]
+        /// </summary>
+        /// <param name="index">Position of the symbol in the sequence (1-based)</param>
+        /// <param name="count">Total number of symbols in the sequence</param>
+        /// <param name="id">Optional identifier</param>
+        /// <returns> --structapp={index},{count},{id}</returns>
+        public Switches StructAppend(int index, int count, string id = null)
+        {
+            commandLine += $" --structapp={index},{count}";
+            if (!string.IsNullOrEmpty(id))
+            {
+                commandLine += $",{id}";
+            }
+            return this;
+        }
+
+        // Other methods from original file
+        public Switches QuietZones(bool? quitZones) { commandLine += quitZones.HasValue ? quitZones.Value ? $" --quietzones" : $" --noquietzones" : string.Empty; return this; }
+
+        /// <summary>
+        /// Process input data for escape sequences.
+        /// </summary>
+        /// <returns> --esc</returns>
+        public Switches EscapeInput() { commandLine += $" --esc"; return this; }
+
+        /// <summary>
+        /// For Data Matrix in GS1 mode, use GS (0x1D) as the GS1 data separator instead of FNC1.
+        /// </summary>
+        /// <returns> --gssep</returns>
+        public Switches Gs1Separator() { commandLine += " --gssep"; return this; }
 
         public Switches Symbol_DataMatrix(TriState shape) { commandLine += shape == TriState.Auto ? string.Empty : shape == TriState.On ? $" --square" : " --dmre"; return this; }
 

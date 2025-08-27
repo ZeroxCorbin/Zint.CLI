@@ -18,11 +18,11 @@ public class Controller
     private static bool __receivingImage = false;
     public static string ZintPath { get; } = Path.Combine(Directory.GetCurrentDirectory(), "Zint\\zint-2.15.0\\zint.exe");
 
-    public static string GetCommand(Symbologies type, string data, string output, double scale, TriState quiteZones) => new Switches().Barcode(type).XDimensionScale(scale).QueitZones(quiteZones).Data(data).Output(output).ToString();
-    public static string GetCommand(Symbologies type, string data, string output, double mils, int dpi) => new Switches().Barcode(type).XDimensionMils(mils, dpi).QueitZones().Data(data).Output(output).ToString();
+    public static string GetCommand(Symbologies type, string data, string output, double scale, bool? quiteZones) => new Switches().Barcode(type).Scale(scale).QuietZones(quiteZones).Data(data).Output(output).ToString();
+    public static string GetCommand(Symbologies type, string data, string output, double mils, int dpi) => new Switches().Barcode(type).ScaleXDimDp(mils.ToString("N1"), dpi.ToString("N")).QuietZones(false).Data(data).Output(output).ToString();
 
-    public static string GetCommandStdout(Symbologies type, string data, string fileType, double scale) => new Switches().Barcode(type).XDimensionScale(scale).QueitZones().Data(data).DirectStdout(fileType).ToString();
-    public static string GetCommandStdout(Symbologies type, string data, string fileType, double mils, int dpi) => new Switches().Barcode(type).XDimensionMils(mils, dpi).QueitZones().Data(data).DirectStdout(fileType).ToString();
+    public static string GetCommandStdout(Symbologies type, string data, string fileType, double scale) => new Switches().Barcode(type).Scale(scale).QuietZones(false).Data(data).DirectStdout(fileType).ToString();
+    public static string GetCommandStdout(Symbologies type, string data, string fileType, double mils, int dpi) => new Switches().Barcode(type).ScaleXDimDp(mils.ToString("N1"), dpi.ToString("N")).QuietZones(false).Data(data).DirectStdout(fileType).ToString();
 
     public static bool SaveBarcode(Barcode barcode)
     {
@@ -96,6 +96,8 @@ public class Controller
     public static Barcode GetBarcode(Symbologies type, string data, string fileType, double scale)
     {
         var code = new Barcode();
+        code.Data = data;
+
         IsError = false;
 
         code.CommandArgs = GetCommandStdout(type, data, fileType, scale);
@@ -108,7 +110,7 @@ public class Controller
 
             StreamReader reader = process.StandardOutput;
             string output = reader.ReadToEnd();
-            code.Data = Encoding.Unicode.GetBytes(output);
+            code.Image = Encoding.Unicode.GetBytes(output);
             code.IsValid = !IsError;
             return code;
         }
@@ -122,6 +124,8 @@ public class Controller
     public static Barcode GetBarcode(Symbologies type, string data, string fileType, double xDimMils, int dpi)
     {
         var code = new Barcode();
+        code.Data = data;
+
         IsError = false;
 
         code.CommandArgs = GetCommandStdout(type, data, fileType, xDimMils, dpi);
@@ -134,7 +138,7 @@ public class Controller
 
             StreamReader reader = process.StandardOutput;
             string output = reader.ReadToEnd();
-            code.Data = Encoding.Unicode.GetBytes(output);
+            code.Image = Encoding.Unicode.GetBytes(output);
             code.IsValid = !IsError;
 
             return code;
