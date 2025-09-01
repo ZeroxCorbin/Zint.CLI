@@ -27,7 +27,7 @@ public class Controller
     public static bool SaveBarcode(Barcode barcode)
     {
         IsError = false;
-        Process process = LaunchProcess(ZintPath, barcode.CommandArgs, Directory.GetCurrentDirectory(), false);
+        var process = LaunchProcess(ZintPath, barcode.CommandArgs, Directory.GetCurrentDirectory(), false);
 
         if (process.WaitForExit(10000))
             return !IsError;
@@ -61,8 +61,8 @@ public class Controller
             if (IsError)
                 return null;
 
-            StreamReader reader = process.StandardOutput;
-            string output = reader.ReadToEnd();
+            var reader = process.StandardOutput;
+            var output = reader.ReadToEnd();
             return Encoding.Unicode.GetBytes(output);
         }
         else
@@ -82,8 +82,8 @@ public class Controller
             if (IsError)
                 return null;
 
-            StreamReader reader = process.StandardOutput;
-            string output = reader.ReadToEnd();
+            var reader = process.StandardOutput;
+            var output = reader.ReadToEnd();
             return Encoding.Unicode.GetBytes(output);
         }
         else
@@ -108,8 +108,8 @@ public class Controller
             if (IsError)
                 return code;
 
-            StreamReader reader = process.StandardOutput;
-            string output = reader.ReadToEnd();
+            var reader = process.StandardOutput;
+            var output = reader.ReadToEnd();
             code.Image = Encoding.Unicode.GetBytes(output);
             code.IsValid = !IsError;
             return code;
@@ -136,8 +136,8 @@ public class Controller
             if (IsError)
                 return code;
 
-            StreamReader reader = process.StandardOutput;
-            string output = reader.ReadToEnd();
+            var reader = process.StandardOutput;
+            var output = reader.ReadToEnd();
             code.Image = Encoding.Unicode.GetBytes(output);
             code.IsValid = !IsError;
 
