@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Zint.CLI;
 
@@ -11,6 +8,9 @@ namespace Zint.CLI;
 /// Represents an exhaustive list of barcode symbologies supported by the Zint library.
 /// The integer value of each member corresponds to the Zint internal symbology ID.
 /// </summary>
+///     [SQLite.StoreAsText]
+[SQLite.StoreAsText]
+[JsonConverter(typeof(StringEnumConverter))]
 public enum Symbologies
 {
     // -- Linear Barcodes --

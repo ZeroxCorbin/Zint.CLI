@@ -1,7 +1,12 @@
-﻿using System.ComponentModel;
+﻿using Newtonsoft.Json.Converters;
+using System.ComponentModel;
+using System.Text.Json.Serialization;
+
 
 namespace Zint.CLI
 {
+    [SQLite.StoreAsText]
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum TriState
     {
         [Description("Off")]

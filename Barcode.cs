@@ -34,7 +34,7 @@ public partial class BarcodeSettings : ObservableObject
     /// Corresponds to Zint's -b flag.
     /// </summary>
     [ObservableProperty]
-    private Symbologies symbology;
+    private Symbologies symbology = Symbologies.DataMatrix;
 
     /// <summary>
     /// The full path for the output image file.
@@ -409,4 +409,9 @@ public partial class BarcodeSettings : ObservableObject
     /// </summary>
     [ObservableProperty]
     private bool readerInitialization;
+
+    public BarcodeSettings Clone()
+    {
+        return (BarcodeSettings)this.MemberwiseClone();
+    }
 }
