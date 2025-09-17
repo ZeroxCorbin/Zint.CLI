@@ -15,6 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Controller.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Zint\zint-2.13.0-win32.zip" />
     <None Remove="Zint\zint-2.15.0\ChangeLog.txt" />
     <None Remove="Zint\zint-2.15.0\manual.pdf" />

@@ -15,7 +15,7 @@ public class ZintController
     /// </summary>
     /// <param name="barcode">The Barcode object containing generation settings.</param>
     /// <returns>The updated Barcode object with the GeneratedImage property set.</returns>
-    public async Task<NewBarcode> GenerateAsync(NewBarcode barcode)
+    public async Task<BarcodeSettings> GenerateAsync(BarcodeSettings barcode)
     {
         barcode.IsValid = false;
         barcode.GeneratedImage = null;
@@ -62,7 +62,7 @@ public class ZintController
         return barcode;
     }
 
-    private string BuildArguments(NewBarcode barcode, string outputPath)
+    private string BuildArguments(BarcodeSettings barcode, string outputPath)
     {
         var switches = new Switches();
 
@@ -179,4 +179,15 @@ public class ZintController
     };
 
     private string ColorToHex(Color c) => $"{c.R:X2}{c.G:X2}{c.B:X2}";
+
+    public static double GetScale(double xdimMils, int dpi) => Math.Round(xdimMils * dpi, MidpointRounding.AwayFromZero) / 2;
+    public static double GetScale(double xdimMils, double dpi) => Math.Round(xdimMils * dpi, MidpointRounding.AwayFromZero) / 2;
+    public static double GetMils(double scale, int dpi) => scale / dpi * 2;
+
+    public static double GetDPI(double xdimMils, double scale) => scale / xdimMils * 2;
+
+    public static double MMtoMils(double mm) => mm * 39.3701;
+    public static double MilsToMM(double mils) => mils / 39.3701;
+
+    public static int DPItoDPMM(int dpi) => (int)Math.Round(dpi / 25.4, 0);
 }

@@ -4,8 +4,8 @@
     {
         public double Mils { get; set; }
         public double DPI { get; set; }
-        public double Scale => Math.Round(Controller.GetScale(Mils / 1000, DPI), 3);
-        public double PPE => Math.Round(Controller.GetScale(Mils / 1000, DPI) * 2, 3);
+        public double Scale => Math.Round(ZintController.GetScale(Mils / 1000, DPI), 3);
+        public double PPE => Math.Round(ZintController.GetScale(Mils / 1000, DPI) * 2, 3);
     }
 
     public class Barcodes
@@ -17,7 +17,7 @@
 
             for (var i = scaleInc; ; i += scaleInc)
             {
-                var mil = Math.Round(Controller.GetMils(i, dpi) * 1000, 3);
+                var mil = Math.Round(ZintController.GetMils(i, dpi) * 1000, 3);
 
                 if (mil > 100)
                     break;
