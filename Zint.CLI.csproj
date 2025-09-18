@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <TargetFrameworks>net8-windows;net9.0;</TargetFrameworks>
+	  <TargetFrameworks>net8-windows;net9.0-windows;</TargetFrameworks>
 	  <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
 
@@ -54,6 +54,10 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
     <PackageReference Include="System.Drawing.Common" Version="9.0.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ImageUtilities.lib\Wpf\ImageUtilities.lib.Wpf.csproj" />
   </ItemGroup>
 
 </Project>

@@ -15,7 +15,7 @@ public class ZintController
     /// </summary>
     /// <param name="barcode">The Barcode object containing generation settings.</param>
     /// <returns>The updated Barcode object with the GeneratedImage property set.</returns>
-    public async Task<BarcodeSettings> GenerateAsync(BarcodeSettings barcode)
+    public async Task<BarcodeSettings> GenerateAsync(BarcodeSettings barcode, int targetDpi)
     {
         barcode.IsValid = false;
         barcode.GeneratedImage = null;
@@ -47,7 +47,7 @@ public class ZintController
         try
         {
             // Load the image from file into a memory stream to prevent file locking
-            barcode.GeneratedImage = await File.ReadAllBytesAsync(outputPath);
+            barcode.GeneratedImage = ImageUtilities.lib.Wpf.ImageFormatHelpers.EnsureDpi(File.ReadAllBytes(outputPath), targetDpi, targetDpi, out double finalX, out double finalY, true);
             barcode.IsValid = true;
         }
         finally
