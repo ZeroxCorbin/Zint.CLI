@@ -80,7 +80,7 @@ public partial class BarcodeSettings : ObservableValidator
     [property: RegularExpression(
         @"^\s*\d+(\.\d+)?(mm|in)\s*,\s*\d+(\.\d+)?\s*(dpi|dpmm)\s*$",
         ErrorMessage = "ScaleXDimDp format: <value>(mm|in),<res>(dpi|dpmm) e.g. 0.33mm,300dpi or 0.33mm,11.8dpmm")]
-    private string? scaleXDimDp;
+    private string scaleXDimDp;
 
     [ObservableProperty]
     [property: Range(0, 500)]

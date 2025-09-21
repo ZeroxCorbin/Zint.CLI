@@ -70,7 +70,7 @@ public class ZintController
 
         // Sizing & Appearance
         if (barcode.Height.HasValue) _ = switches.Height(barcode.Height.Value);
-        if (!string.IsNullOrEmpty(barcode.ScaleXDimDp)) _ = switches.ScaleXDimDp(barcode.ScaleXDimDp);
+        if (barcode.UseScaleXDimDp) _ = switches.ScaleXDimDp(barcode.ScaleXDimDp);
         else if (barcode.Scale.HasValue) _ = switches.Scale(barcode.Scale.Value);
         if (barcode.BorderWidth.HasValue) _ = switches.Border(barcode.BorderWidth.Value);
         if (barcode.Whitespace.HasValue) _ = switches.Whitespace(barcode.Whitespace.Value);
