@@ -74,6 +74,9 @@ public partial class BarcodeSettings : ObservableValidator
     private double? scale;
 
     [ObservableProperty]
+    private bool useScaleXDimDp;   // When true, ScaleXDimDp drives Scale & DPI; when false user edits Scale directly.
+
+    [ObservableProperty]
     [property: RegularExpression(@"^\s*\d+(\.\d+)?(mm|in)\s*,\s*\d+\s*(dpi|dpmm)\s*$",
         ErrorMessage = "ScaleXDimDp format: <value>(mm|in),<res>(dpi|dpmm) e.g. 0.33mm,300dpi")]
     private string? scaleXDimDp;
@@ -277,4 +280,6 @@ public partial class BarcodeSettings : ObservableValidator
         ValidateProperty(Data, nameof(Data));
         ValidateProperty(InputPath, nameof(InputPath));
     }
+
+
 }
