@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
-using System.Linq;
 using System.Reflection;
-using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Zint.CLI;
 
@@ -31,7 +28,7 @@ public partial class BarcodeSettings : ObservableValidator
         // Re-run validation for every property that has validation attributes
         foreach (var propName in _validatedProperties)
         {
-            var pi = GetType().GetProperty(propName,
+            PropertyInfo? pi = GetType().GetProperty(propName,
                 BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             if (pi is null) continue;
             var value = pi.GetValue(this);
@@ -198,20 +195,20 @@ public partial class BarcodeSettings : ObservableValidator
     {
         ValidateAllProperties();
         var list = new List<string>();
-        foreach (var kv in GetErrorsDictionary())
+        foreach (KeyValuePair<string, List<string>> kv in GetErrorsDictionary())
             list.AddRange(kv.Value);
 
         errors = list;
-        isValid = errors.Count == 0;
-        return isValid;
+        IsValid = errors.Count == 0;
+        return IsValid;
     }
 
     public IReadOnlyDictionary<string, List<string>> GetErrorsDictionary()
     {
         var dict = new Dictionary<string, List<string>>();
-        foreach (var prop in GetType().GetProperties())
+        foreach (PropertyInfo prop in GetType().GetProperties())
         {
-            var errs = GetErrors(prop.Name);
+            IEnumerable<ValidationResult> errs = GetErrors(prop.Name);
             if (errs is IEnumerable<object> e)
             {
                 var collected = new List<string>();
@@ -263,24 +260,22 @@ public partial class BarcodeSettings : ObservableValidator
                     ValidateSingle(other);
         }
 
-        isValid = !GetErrorsDictionary().Any();
+        IsValid = !GetErrorsDictionary().Any();
     }
 
     private void ValidateSingle(string propertyName)
     {
-        var prop = GetType().GetProperty(propertyName,
+        PropertyInfo? prop = GetType().GetProperty(propertyName,
             BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
         if (prop is null) return;
         var value = prop.GetValue(this);
         ValidateProperty(value, propertyName);
     }
 
-    private void UpdateIsValid() => isValid = !GetErrorsDictionary().Any();
+    private void UpdateIsValid() => IsValid = !GetErrorsDictionary().Any();
     private void RevalidateEitherInputPair()
     {
         ValidateProperty(Data, nameof(Data));
         ValidateProperty(InputPath, nameof(InputPath));
     }
-
-
 }
