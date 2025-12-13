@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Drawing;
 using System.Reflection;
 
 namespace Zint.CLI;
@@ -108,8 +107,8 @@ public partial class BarcodeSettings : ObservableValidator
     private double? dotSize;
 
     // COLORING --------------------------------------------------------------
-    [ObservableProperty] private Color? foregroundColor;
-    [ObservableProperty] private Color? backgroundColor;
+    [ObservableProperty] private ColorRgb? foregroundColor;
+    [ObservableProperty] private ColorRgb? backgroundColor;
     [ObservableProperty] private bool reverseColors;
     [ObservableProperty] private bool noBackground;
     [ObservableProperty] private bool useCmyk;

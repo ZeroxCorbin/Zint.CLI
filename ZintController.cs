@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Drawing;
 using System.Collections.Generic;
 
 namespace Zint.CLI;
@@ -168,7 +167,7 @@ public class ZintController
         return false;
     }
 
-    private string ColorToHex(Color c) => $"{c.R:X2}{c.G:X2}{c.B:X2}";
+    private string ColorToHex(ColorRgb c) => $"{c.R:X2}{c.G:X2}{c.B:X2}";
 
     public static double GetScale(double xdimMils, int dpi) => Math.Round(xdimMils * dpi, MidpointRounding.AwayFromZero) / 2;
     public static double GetScale(double xdimMils, double dpi) => Math.Round(xdimMils * dpi, MidpointRounding.AwayFromZero) / 2;
