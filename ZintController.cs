@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using BarcodeBuilder.lib.Core.Models;
+using BarcodeBuilder.lib.Core.Enums;
+using System.Diagnostics;
 using System.Collections.Generic;
 
 namespace Zint.CLI;

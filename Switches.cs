@@ -1,4 +1,5 @@
-﻿using System.Reflection.Metadata;
+﻿using BarcodeBuilder.lib.Core.Enums;
+using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
 
 namespace Zint.CLI

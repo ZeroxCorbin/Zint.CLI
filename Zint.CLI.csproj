@@ -61,6 +61,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BarcodeBuilder.lib.Core\BarcodeBuilder.lib.Core.csproj" />
     <ProjectReference Include="..\ImageUtilities.lib\Wpf\ImageUtilities.lib.Wpf.csproj" />
   </ItemGroup>
 
